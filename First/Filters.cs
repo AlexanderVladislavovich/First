@@ -353,6 +353,93 @@ namespace First
         }
     }
 
+    class TopHatFilter : Filters
+    {
+
+        protected Bitmap openedImage;
+        public TopHatFilter(Bitmap _sourceimage)
+        {
+            sourceImage = _sourceimage;
+            Filters eros = new ErosionFilter(_sourceimage);
+            openedImage = eros.processImage();
+            Filters eros2 = new ErosionFilter(openedImage);
+            openedImage = eros2.processImage();
+            Filters dilat = new DilationFilter(openedImage);
+            openedImage = dilat.processImage();
+        }
+
+        protected override Color calculateNewPixelColor(int x, int y)
+        {
+            Color col1 = sourceImage.GetPixel(x, y);
+            Color col2 = openedImage.GetPixel(x, y);
+            return Color.FromArgb(
+                Clamp(col1.R - col2.R, 0, 255),
+                 Clamp(col1.G - col2.G, 0, 255),
+                 Clamp(col1.B - col2.B, 0, 255)
+                );
+           
+        }
+
+    }
+
+    class BlackHatFilter : Filters
+    {
+
+        protected Bitmap closedImage;
+        public BlackHatFilter(Bitmap _sourceimage)
+        {
+            sourceImage = _sourceimage;
+            Filters dilat = new DilationFilter(_sourceimage);
+            closedImage = dilat.processImage();
+            Filters dilat2 = new DilationFilter(closedImage);
+            closedImage = dilat2.processImage();
+            Filters eros = new ErosionFilter(closedImage);
+            closedImage = eros.processImage();
+        }
+
+        protected override Color calculateNewPixelColor(int x, int y)
+        {
+            Color col1 = sourceImage.GetPixel(x, y);
+            Color col2 = closedImage.GetPixel(x, y);
+            return Color.FromArgb(
+                Clamp(col2.R - col1.R, 0, 255),
+                 Clamp(col2.G - col1.G, 0, 255),
+                 Clamp(col2.B - col1.B, 0, 255)
+                );
+        }
+
+    }
+
+    class GradFilter : Filters
+    {
+        Bitmap erosImage;
+        Bitmap dilatImage;
+
+        public GradFilter( Bitmap _sourceimage)
+        {
+            sourceImage = _sourceimage;
+            Filters eros = new ErosionFilter(_sourceimage);
+            erosImage = eros.processImage();
+            Filters dilat = new DilationFilter(_sourceimage);
+            dilatImage = dilat.processImage();
+        }
+
+        protected override Color calculateNewPixelColor(int x, int y)
+        {
+            
+            Color col1 = erosImage.GetPixel(x, y);
+            Color col2 = dilatImage.GetPixel(x, y);
+            return Color.FromArgb(
+                Clamp(col2.R - col1.R, 0, 255),
+                Clamp(col2.G - col1.G, 0, 255),
+                Clamp(col2.B - col1.B, 0, 255)
+                );
+
+        }
+
+    }
+
+
 
     class MedianFilter1 : MatrixFilter //медианный
     { 

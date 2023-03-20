@@ -136,5 +136,29 @@ namespace First
             pictureBox1.Image = resultimage;
             pictureBox1.Refresh();
         }
+
+        private void blackHatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filters filter = new BlackHatFilter(image);
+            Bitmap resultimage = filter.processImage();
+            pictureBox1.Image = resultimage;
+            pictureBox1.Refresh();
+        }
+
+        private void topHatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filters filter = new TopHatFilter(image);
+            Bitmap resultimage = filter.processImage();
+            pictureBox1.Image = resultimage;
+            pictureBox1.Refresh();
+        }
+
+        private void gradToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Filters filter = new GradFilter(image);
+            Bitmap resultimage = filter.processImage();
+            pictureBox1.Image = resultimage;
+            pictureBox1.Refresh();
+        }
     }
 }
